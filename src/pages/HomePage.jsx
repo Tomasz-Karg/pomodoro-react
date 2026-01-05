@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CountDownTimer } from '../components/CountDownTimer';
 
 
 const MODE = Object.freeze({
@@ -35,7 +36,7 @@ export function HomePage() {
       {mode === 'working' && (
         <div>
           <div>
-            <label>Work Timer running</label>
+            <CountDownTimer durationMinutes={25}/>
           </div>
           <div>
             <button className="button"
@@ -64,7 +65,7 @@ export function HomePage() {
       {mode === 'pausing' && (
         <>
           <div>
-            <label>Pause Timer running</label>
+            <CountDownTimer durationMinutes={5}/>
           </div>
           <div>
             <button className="button"

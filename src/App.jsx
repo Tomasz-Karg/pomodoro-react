@@ -1,11 +1,13 @@
 import './App.css'
+import { Routes, Route } from 'react-router'
+import {HomePage} from './pages/HomePage'
 
 function App() {
 
   return (
-   <div>
-    Pomodoro
-   </div>
+    <Routes>
+      <Route index element={<HomePage/>}/>
+    </Routes>
   );
 }
 
