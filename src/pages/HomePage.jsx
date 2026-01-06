@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { CountDownTimer } from '../components/CountDownTimer';
+import { Timer } from '../components/Timer';
 
+ // 6 Modes: IDLE, WORKING, WORK_ENDED, PAUSING, PAUSE_ENDED and FINISHED
 
-const MODE = Object.freeze({
+  const MODE = Object.freeze({
   IDLE: "idle",
   WORKING: "working",
   WORK_ENDED: "workEnded",
@@ -11,43 +12,45 @@ const MODE = Object.freeze({
   FINISHED: "finished"
 })
 
-
 export function HomePage() {
 
-  // 6 Modes: idle, working, workEnded, pausing, pauseEnded and finished
   const [mode, setMode] = useState(MODE.IDLE);
-
-//Add comments, use constMode insted of just strings
-//add timer
 
   return (
     <div>
 
+      {/* IDLE -> WORKING */}
       {mode === MODE.IDLE && (
-        <button className="button"
-          onClick={() => { 
-            setMode(MODE.WORKING); 
+        <>
+          <button className="button"
+            onClick={() => { 
+              setMode(MODE.WORKING); 
+            }
           }
-        }
-        >
-          Start
-        </button>)}
+          >
+            Start
+          </button>
+        </>
+      )}
 
-      {mode === 'working' && (
+
+      {/* WORKING -> WORK_ENDED
+          WORKING -> FINISHED */}
+      {mode === MODE.WORKING && (
         <div>
           <div>
-            <CountDownTimer durationMinutes={25}/>
+            <Timer durationMinutes={25}/>
           </div>
           <div>
             <button className="button"
-              onClick={() => { setMode('confirmPause') }}
+              onClick={() => { setMode(MODE.WORK_ENDED) }}
             >
               Skip
             </button>
           </div>
           <div>
             <button className="button"
-              onClick={() => { setMode('finished') }}
+              onClick={() => { setMode(MODE.FINISHED) }}
             >
               Pomodoro finished
             </button>
@@ -55,21 +58,24 @@ export function HomePage() {
         </div>
       )}
 
-      {mode === 'confirmPause' && (
+      
+      {/* WORK_ENDED -> PAUSING */}
+      {mode === MODE.WORK_ENDED && (
         <button className="button"
-          onClick={() => { setMode('pausing') }}
+          onClick={() => { setMode(MODE.PAUSING) }}
         >
           Ready for your Pause?
         </button>)}
 
-      {mode === 'pausing' && (
+      {/* PAUSING -> PAUSE_ENDED */}
+      {mode === MODE.PAUSING && (
         <>
           <div>
-            <CountDownTimer durationMinutes={5}/>
+            <Timer durationMinutes={5}/>
           </div>
           <div>
             <button className="button"
-              onClick={() => { setMode('confirmWorking') }}
+              onClick={() => { setMode(MODE.PAUSE_ENDED) }}
             >
               Skip
             </button>
@@ -77,13 +83,15 @@ export function HomePage() {
         </>
       )}
 
-      {mode === 'confirmWorking' && (
+      {/* PAUSE_ENDED -> WORKING */}
+      {mode === MODE.PAUSE_ENDED && (
         <button className="button"
-          onClick={() => { setMode('working') }}
+          onClick={() => { setMode(MODE.WORKING) }}
         >
           Ready to continiue?
         </button>)}
 
+      {/* FINISHED -> IDLE */}
       {mode === 'finished' && (
 
 
@@ -93,7 +101,7 @@ export function HomePage() {
           </div>
           <div>
             <button className="button"
-              onClick={() => { setMode('idle') }}
+              onClick={() => { setMode(MODE.IDLE) }}
             >
               Return
             </button>
