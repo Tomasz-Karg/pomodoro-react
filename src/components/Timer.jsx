@@ -1,4 +1,5 @@
 import { useState, useEffect} from 'react';
+import styles from './Timer.module.css'
 
 export function Timer( {durationMinutes} ){
 
@@ -19,17 +20,17 @@ export function Timer( {durationMinutes} ){
   }, [time]);
 
   function getFormatedTime(time){ 
-    let total_secconds = parseInt(Math.floor(time / 1000))
-    let minutes = Math.floor(total_secconds / 60)
+    let total_seconds = parseInt(Math.floor(time / 1000))
+    let minutes = Math.floor(total_seconds / 60)
     let formatedMinutes = minutes.toString().padStart(2, '0');
-    let seconds = total_secconds % 60
+    let seconds = total_seconds % 60
     let formatedSeconds = seconds.toString().padStart(2, '0');
     return `${formatedMinutes} : ${formatedSeconds}`;
   };
 
 
   return(
-    <div>
+    <div className={styles.timer}>
       {getFormatedTime(time)}
     </div>
   );

@@ -19,6 +19,10 @@ export function HomePage() {
   return (
     <div>
 
+      <h1>
+        Pomodoro Timer
+      </h1>
+
       {/* IDLE -> WORKING */}
       {mode === MODE.IDLE && (
         <>
@@ -39,7 +43,7 @@ export function HomePage() {
       {mode === MODE.WORKING && (
         <div>
           <div>
-            <Timer className="blink" durationMinutes={1}/>
+            <Timer durationMinutes={25}/>
           </div>
           <div>
             <button className="button"
