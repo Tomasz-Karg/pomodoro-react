@@ -9,7 +9,7 @@ export function Timer( {durationMinutes} ){
   //"time" state gets set and saved every 1000 ms to one less second of its previous value.  
   useEffect( () => {
 
-    if (time < 0) return;
+    if (time <= 0) return;
 
     const timeoutId = setTimeout( () => {
       setTime(time => time-1000)
@@ -18,10 +18,19 @@ export function Timer( {durationMinutes} ){
     return () => clearTimeout(timeoutId);
   }, [time]);
 
+  function getFormatedTime(time){ 
+    let total_secconds = parseInt(Math.floor(time / 1000))
+    let minutes = Math.floor(total_secconds / 60)
+    let formatedMinutes = minutes.toString().padStart(2, '0');
+    let seconds = total_secconds % 60
+    let formatedSeconds = seconds.toString().padStart(2, '0');
+    return `${formatedMinutes} : ${formatedSeconds}`;
+  };
+
 
   return(
     <div>
-      {time}
+      {getFormatedTime(time)}
     </div>
   );
 }

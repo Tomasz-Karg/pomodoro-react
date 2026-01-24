@@ -39,7 +39,7 @@ export function HomePage() {
       {mode === MODE.WORKING && (
         <div>
           <div>
-            <Timer durationMinutes={25}/>
+            <Timer className="blink" durationMinutes={1}/>
           </div>
           <div>
             <button className="button"
