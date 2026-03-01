@@ -1,119 +1,47 @@
 import { useState } from 'react'
 import { Timer } from '../components/Timer';
+import { MODE, MODE_CONFIG } from '../config/modeConfig'
 
  // 6 Modes: IDLE, WORKING, WORK_ENDED, PAUSING, PAUSE_ENDED and FINISHED
 
-  const MODE = Object.freeze({
-  IDLE: "idle",
-  WORKING: "working",
-  WORK_ENDED: "workEnded",
-  PAUSING: "pausing",
-  PAUSE_ENDED: "pauseEnded",
-  FINISHED: "finished"
-})
+
 
 export function HomePage() {
 
   const [mode, setMode] = useState(MODE.IDLE);
 
   return (
-    <div>
-
-      <h1>
-        Pomodoro Timer
-      </h1>
-
-      {/* IDLE -> WORKING */}
-      {mode === MODE.IDLE && (
-        <>
-          <button className="button"
-            onClick={() => { 
-              setMode(MODE.WORKING); 
-            }
-          }
-          >
-            Start
-          </button>
-        </>
-      )}
-
-
-      {/* WORKING -> WORK_ENDED
-          WORKING -> FINISHED */}
-      {mode === MODE.WORKING && (
-        <div>
-          <div>
-            <Timer durationMinutes={25}/>
-          </div>
-          <div>
-            <button className="button"
-              onClick={() => { setMode(MODE.WORK_ENDED) }}
-            >
-              Skip
-            </button>
-          </div>
-          <div>
-            <button className="button"
-              onClick={() => { setMode(MODE.FINISHED) }}
-            >
-              Pomodoro finished
-            </button>
-          </div>
-        </div>
-      )}
-
       
-      {/* WORK_ENDED -> PAUSING */}
-      {mode === MODE.WORK_ENDED && (
-        <button className="button"
-          onClick={() => { setMode(MODE.PAUSING) }}
-        >
-          Ready for your Pause?
-        </button>)}
+    <div className='grid-container'>
+      <div className='title'>
+        Pomodoro Timer
+      </div>
 
-      {/* PAUSING -> PAUSE_ENDED */}
-      {mode === MODE.PAUSING && (
-        <>
-          <div>
-            <Timer durationMinutes={5}/>
-          </div>
-          <div>
-            <button className="button"
-              onClick={() => { setMode(MODE.PAUSE_ENDED) }}
-            >
-              Skip
-            </button>
-          </div>
-        </>
-      )}
+      <div className='phase-description'>
+        {MODE_CONFIG[mode].phaseDescription}
+      </div>
 
-      {/* PAUSE_ENDED -> WORKING */}
-      {mode === MODE.PAUSE_ENDED && (
-        <button className="button"
-          onClick={() => { setMode(MODE.WORKING) }}
-        >
-          Ready to continiue?
-        </button>)}
+      <div className='timer'>
+        <Timer durationMinutes={25}/>
+      </div>
 
-      {/* FINISHED -> IDLE */}
-      {mode === 'finished' && (
-
-
-        <div>
-          <div>
-            <label>Ihuuuu, Task finished!</label>
-          </div>
-          <div>
-            <button className="button"
-              onClick={() => { setMode(MODE.IDLE) }}
-            >
-              Return
-            </button>
-          </div>
-
-        </div>
-      )}
+      <div className='buttons'>
+        {/* TODO change index to a reliable alternative for the key*/} 
+        
+        {MODE_CONFIG[mode].buttons.map((button, index) =>(
+          
+          <button 
+            key = {index}
+            className = {button.className}
+            onClick = {() => setMode(button.next)}
+          >
+            {button.label}
+          </button>
+        ))
+        }
+      </div>
 
     </div>
+
   );
 }

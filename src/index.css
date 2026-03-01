@@ -1,8 +1,6 @@
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
+ 
   color-scheme: light dark;
   color: #242424;
   background-color: rgba(255, 255, 255, 0.87);
@@ -13,35 +11,64 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+.grid-container{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+
+  gap: 6px;
+
+  justify-items: center;
+  align-items: center;
 }
 
-h1 {
-  font-size: 2.7em;
-  line-height: 1.1;
+.title{
+  font-size: 4em;
+  line-height: 1.5;
+  font-weight: 700;
+  color: #8D021F;
 }
 
-button {
+.phase-description{
+  font-size: 2.5em;
+  font-weight: 400;
+}
+
+.main-button {
   border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1.3em;
+  font-weight: 500;
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #8D021F;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin: 1em 1em 0 1em;
+}
+
+.secondary-button{
+  border-radius: 8px;
+  border-color: #8D021F;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #8D021F;
+  color: #8D021F;
+  background-color: rgba(255, 255, 255, 0.87);
   cursor: pointer;
   transition: border-color 0.25s;
   margin: 1em 1em 0 1em;
+}
 
-}
+/* maybe remove this 
 button:hover {
-  border-color: #242424;
+  border-color: #660101;
 }
+*/
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
