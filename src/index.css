@@ -34,6 +34,28 @@
   font-weight: 400;
 }
 
+.timer {
+  font-size: 4em;
+  font-weight: 700;
+}
+
+.blink {
+    animation: blink-animation 1s infinite;
+  }
+  
+  @keyframes blink-animation {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+
 .main-button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -57,7 +79,7 @@
   font-weight: 500;
   font-family: inherit;
   color: #8D021F;
-  background-color: rgba(255, 255, 255, 0.87);
+  background-color: rgba(194, 179, 179, 0.87);
   cursor: pointer;
   transition: border-color 0.25s;
   margin: 1em 1em 0 1em;

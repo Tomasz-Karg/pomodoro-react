@@ -17,6 +17,7 @@ export const MODE_CONFIG = {
   
   [MODE.WORKING]: {
     phaseDescription: "Working Phase",
+    isRunning: true,
     buttons: [
       {label: "Start", className: "main-button", next: MODE.WORKING },
       {label: "Skip", className: "secondary-button", next: MODE.WORK_ENDED}
