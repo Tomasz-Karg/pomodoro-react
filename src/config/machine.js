@@ -12,9 +12,11 @@ export const MODE = {
 export const EVENT = {
   START: "START",
   PAUSE: "PAUSE",
+  RESUME: "RESUME",
   SKIP: "SKIP",
   RESET: "RESET",
-  TIMER_FINISHED: "TIMER_FINISHED"
+  TIMER_FINISHED: "TIMER_FINISHED",
+  COMPLETED: "COMPLETED"
 };
 
 /* Machine that contains the transitions */
@@ -28,7 +30,9 @@ export const machine = {
     START: {
       target: MODE.WORKING,
       /* Sideeffect is the action "startWork" */
-      action: "startWork"
+      action: "startWork",
+      duration: 25,
+      iterationIncrement: 0
     },
 
     buttons: [
@@ -42,21 +46,53 @@ export const machine = {
     
     TIMER_FINISHED: {
       target: MODE.PAUSING,
-      action: "startPause"
+      action: "startPause",
+      duration: 5,
+      iterationIncrement: 0
+    },
+    START: {
+      target: MODE.WORKING,
+      action: "startWork",
+      duration: 25,
+      iterationIncrement: 0
+    },
+    PAUSE: {
+      target: MODE.WORKING,
+      action: "pause"
+    },
+    RESUME: {
+      target: MODE.WORKING,
+      action: "resume",
+      iterationIncrement: 0
     },
     SKIP: {
       target: MODE.PAUSING,
-      action: "startPause"
+      action: "startPause",
+      duration: 5,
+      iterationIncrement: 0
     },
     RESET: {
       target: MODE.WORKING,
-      action: "startWork"
+      action: "reset",
+      duration: 25,
+      iterationIncrement: 0
+    },
+    COMPLETED: {
+      target: MODE.IDLE,
+      action: "reset",
+      duration: 25,
+      iterationIncrement: 0,
+      resetIteration: true
     },
     
     isRunning: true,
 
     buttons: [
-      {label: "Skip", className: "secondary-button", event : EVENT.SKIP}
+      {label: "Pause", className: "secondary-button", event : EVENT.PAUSE},
+      {label: "Resume", className: "secondary-button", event : EVENT.RESUME},
+      {label: "Reset", className: "secondary-button", event : EVENT.START},
+      {label: "Skip", className: "secondary-button", event : EVENT.SKIP},
+      {label: "Finished", className: "secondary-button", event : EVENT.COMPLETED}
     ]
   },
 
@@ -64,20 +100,39 @@ export const machine = {
 
     phaseDescription: "Pause",
 
-    TIMER_FINISHED:{
-      target: MODE.WORKING,
-      action: "startWork"
+    PAUSE: {
+      target: MODE.PAUSING,
+      action: "pause",
+      iterationIncrement: 0
+    },
+    RESUME: {
+      target: MODE.PAUSING,
+      action: "resume",
+      iterationIncrement: 0
+    },
+    RESET: {
+      target: MODE.PAUSING,
+      action: "startPause",
+      duration: 5,
+      iterationIncrement: 0
     },
     SKIP: {
       target: MODE.WORKING,
-      action: "startWork"
+      action: "startWork",
+      duration: 25,
+      iterationIncrement: 1
     },
-    RESET: {
-      target: MODE.PAUSE,
-      action: "startPause"
+    TIMER_FINISHED:{
+      target: MODE.WORKING,
+      action: "startWork",
+      duration: 25,
+      iterationIncrement: 1
     },
 
     buttons: [
+      {label: "Pause", className: "secondary-button", event : EVENT.PAUSE},
+      {label: "Resume", className: "secondary-button", event : EVENT.RESUME},
+      {label: "Reset", className: "secondary-button", event : EVENT.RESET},
       {label: "Skip", className: "secondary-button", event : EVENT.SKIP}
     ]
   }

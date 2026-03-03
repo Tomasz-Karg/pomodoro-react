@@ -5,22 +5,22 @@ import { MODE, EVENT, machine} from '../config/machine'
 
 export function HomePage() {
 
-  // Timerdurations in MilliSeconds
-  const workPhaseDuration = 25 * 60 * 1000;
-  const smallPuaseDuration = 5 * 60 * 1000; 
-  const bigPauseDuration = 20 * 60 * 1000;
+  function timeInMs(time) {
+    return time * 60 * 1000
+  }
 
   //TODO increment through every workphase that is not skipped, after
   // every 4th work phase do a big pause, not just a small one
-  const iterration = 0;
+  const [iteration, setIteration] = useState(1);
 
   //Set initial STATE to IDLE
   const [mode, setMode] = useState(MODE.IDLE);
 
+  // Set Timer to be paused
   const [isRunning, setIsRunning] = useState(false)
 
-  //Set
-  const [timeLeft, setTimeLeft] = useState(workPhaseDuration);
+  // Set initial showed time as 25 minutes
+  const [timeLeft, setTimeLeft] = useState(timeInMs(25));
 
 
 
@@ -54,6 +54,7 @@ export function HomePage() {
   },[timeLeft])
 
 
+
   /* Dispatch function checks the current STATE and 
   deepending on the EVENT moves to the target STATE and 
   calls the ACTION */
@@ -65,33 +66,47 @@ export function HomePage() {
 
     if (!transition) return;
 
-    const { target, action } = transition;
+    /* use object destructuring to access target, action and everything
+    else into a payload object */
+    const { target, action, ...payload} = transition;
 
     setMode(target);
 
-    runAction(action);
+    runAction(action, payload);
   }
   
 
 
   /* Action Handler */
 
-  const runAction = (action) => {
+  const runAction = (action, payload) => {
     switch(action) {
       
       case "startWork":
-        setTimeLeft(workPhaseDuration);
+        setTimeLeft(timeInMs(payload.duration));
         setIsRunning(true);
+        setIteration(iteration + payload.iterationIncrement)
         break;
 
       case "startPause": 
-        setTimeLeft(smallPuaseDuration);
+        setTimeLeft(timeInMs(payload.duration));
         setIsRunning(true)
         break;
 
-      /*case "resetPomodoro":
-        setTimeLeft*/
+      case "reset":
+        setTimeLeft(timeInMs(payload.duration));
+        setIsRunning(false);
+        break;
+
+      case "pause":
+        setIsRunning(false);
+        break;
       
+      case "resume":
+        setIsRunning(true);
+        console.log('resumed')
+        break;
+
       default:
         break;
     }
@@ -108,6 +123,10 @@ export function HomePage() {
 
       <div className='phase-description'>
         {machine[mode].phaseDescription}
+      </div>
+
+      <div className='iteration'>
+        iteration #{iteration}
       </div>
 
       <div className='timer'>

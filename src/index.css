@@ -14,7 +14,7 @@
 .grid-container{
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 
   gap: 6px;
 
@@ -75,7 +75,7 @@
   border-color: #8D021F;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 1.3em;
   font-weight: 500;
   font-family: inherit;
   color: #8D021F;
