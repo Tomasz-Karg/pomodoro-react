@@ -85,13 +85,25 @@ export function HomePage() {
       case "startWork":
         setTimeLeft(timeInMs(payload.duration));
         setIsRunning(true);
+        
+// TODO change the line below, it is shit for some reason        
         setIteration(iteration + payload.iterationIncrement)
         break;
 
-      case "startPause": 
-        setTimeLeft(timeInMs(payload.duration));
+      //break inside or outside the scope declaration {} ???
+      case "startPause": {
+        /* Implemented the 4th pause to be a 20 min pause */
+        let pauseDuration = payload.duration;
+
+        if(iteration % 4 === 0){
+          pauseDuration = 20
+        }
+      
+        setTimeLeft(timeInMs(pauseDuration));
         setIsRunning(true)
         break;
+      }
+      
 
       case "reset":
         setTimeLeft(timeInMs(payload.duration));
@@ -104,7 +116,6 @@ export function HomePage() {
       
       case "resume":
         setIsRunning(true);
-        console.log('resumed')
         break;
 
       default:
