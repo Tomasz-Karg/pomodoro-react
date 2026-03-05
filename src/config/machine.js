@@ -88,8 +88,7 @@ export const machine = {
     isRunning: true,
 
     buttons: [
-      {label: "Pause", className: "secondary-button", event : EVENT.PAUSE},
-      {label: "Resume", className: "secondary-button", event : EVENT.RESUME},
+      {type: "PauseResume", className: "main-button"},
       {label: "Reset", className: "secondary-button", event : EVENT.START},
       {label: "Skip", className: "secondary-button", event : EVENT.SKIP},
       {label: "Finished", className: "secondary-button", event : EVENT.COMPLETED}
@@ -130,8 +129,7 @@ export const machine = {
     },
 
     buttons: [
-      {label: "Pause", className: "secondary-button", event : EVENT.PAUSE},
-      {label: "Resume", className: "secondary-button", event : EVENT.RESUME},
+      {type: "PauseResume", className: "main-button"},
       {label: "Reset", className: "secondary-button", event : EVENT.RESET},
       {label: "Skip", className: "secondary-button", event : EVENT.SKIP}
     ]

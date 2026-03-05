@@ -5,6 +5,9 @@ import { MODE, EVENT, machine} from '../config/machine'
 
 export function HomePage() {
 
+  //TODO Implement audio sound when timer hits 0
+  //var audio = new Audio('../assets/timer-finished.mp3');
+
   function timeInMs(time) {
     return time * 60 * 1000
   }
@@ -31,7 +34,12 @@ export function HomePage() {
   useEffect( () => {
 
     if (!isRunning) return;
-    if (timeLeft <= 0) return;
+    if (timeLeft <= 0) {
+      
+      //TODO play audio
+      //audio.play();
+      return;
+    };
       
     const timeoutId = setTimeout( () => {
       setTimeLeft(time => time-1000)
@@ -78,7 +86,6 @@ export function HomePage() {
 
 
   /* Action Handler */
-
   const runAction = (action, payload) => {
     switch(action) {
       
@@ -86,25 +93,23 @@ export function HomePage() {
         setTimeLeft(timeInMs(payload.duration));
         setIsRunning(true);
         
-// TODO change the line below, it is shit for some reason        
-        setIteration(iteration + payload.iterationIncrement)
+        // React now always uses the latest value to increment from
+        // safe pattern for asynchronus React state updates         
+        setIteration(prev => prev + payload.iterationIncrement)
         break;
 
-      //break inside or outside the scope declaration {} ???
+      // all case statements share the same scope, so we isolate const
+      // pauseDuration to the local scope with the {} wrapping the case
       case "startPause": {
         /* Implemented the 4th pause to be a 20 min pause */
-        let pauseDuration = payload.duration;
-
-        if(iteration % 4 === 0){
-          pauseDuration = 20
-        }
+        const pauseDuration = 
+          iteration % 4 === 0 ? 20 : payload.duration
       
         setTimeLeft(timeInMs(pauseDuration));
         setIsRunning(true)
         break;
       }
       
-
       case "reset":
         setTimeLeft(timeInMs(payload.duration));
         setIsRunning(false);
@@ -146,17 +151,34 @@ export function HomePage() {
 
       <div className='buttons'>
         {/* TODO change index to a reliable alternative for the key*/} 
-        
-        {machine[mode].buttons.map((button, index) =>(
-          
-          <button 
-            key = {index}
-            className = {button.className}
-            onClick = {() => dispatch(button.event)}
-          >
-            {button.label}
-          </button>
-        ))
+
+        {/* Changed => (... to => {... because with the if staement we
+        cant use an implicit return anymore */}
+        {machine[mode].buttons.map((button, index) => {
+          if (button.type === "PauseResume"){
+            return(
+              <button 
+                key = {index}
+                className = {button.className}
+                // If the Timer is running we should display the "Pause"
+                // Button, otherwise the "Resume" Button 
+                onClick = {() => dispatch(isRunning ? EVENT.PAUSE : EVENT.RESUME)}
+              >
+                {isRunning ? "Pause" : "Resume"}
+              </button>
+            )
+          }
+
+          return(
+            <button 
+              key = {index}
+              className = {button.className}
+              onClick = {() => dispatch(button.event)}
+            >
+              {button.label}
+            </button>
+          )
+        })
         }
       </div>
 
