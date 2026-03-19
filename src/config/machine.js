@@ -4,9 +4,17 @@ for this pmodoro project*/
 /* Finite list of STATES*/
 export const MODE = {
     IDLE: "IDLE",
-    WORKING: "WORKING",
-    PAUSING: "PAUSING",
+    WORK: "WORK",
+    BREAK: "BREAK"
 };
+
+export const ACTION = {
+  INIT_WORK: "INIT_WORK",
+  INIT_BREAK: "INIT_BREAK",
+  PAUSE: "PAUSE",
+  RESUME: "RESUME",
+  RESET: "RESET"
+}
 
 /* List of EVENTS*/
 export const EVENT = {
@@ -28,9 +36,9 @@ export const machine = {
 
     /* EVENT START leads to target STATE WORKING*/
     START: {
-      target: MODE.WORKING,
-      /* Sideeffect is the action "startWork" */
-      action: "startWork",
+      target: MODE.WORK,
+      /* Sideeffect is the action "initiateWork" */
+      action: ACTION.INIT_WORK,
       duration: 25,
       iterationIncrement: 0
     },
@@ -40,90 +48,94 @@ export const machine = {
     ]
   },
 
-  [MODE.WORKING]: {
+  [MODE.WORK]: {
 
     phaseDescription: "Working Phase",
     
-    TIMER_FINISHED: {
-      target: MODE.PAUSING,
-      action: "startPause",
-      duration: 5,
-      iterationIncrement: 0
-    },
     START: {
-      target: MODE.WORKING,
-      action: "startWork",
+      target: MODE.WORK,
+      action: ACTION.RESUME,
       duration: 25,
       iterationIncrement: 0
     },
     PAUSE: {
-      target: MODE.WORKING,
-      action: "pause"
+      target: MODE.WORK,
+      action: ACTION.PAUSE
     },
     RESUME: {
-      target: MODE.WORKING,
-      action: "resume",
+      target: MODE.WORK,
+      action: ACTION.RESUME,
       iterationIncrement: 0
     },
     SKIP: {
-      target: MODE.PAUSING,
-      action: "startPause",
+      target: MODE.BREAK,
+      action: ACTION.INIT_BREAK,
       duration: 5,
       iterationIncrement: 0
     },
     RESET: {
-      target: MODE.WORKING,
-      action: "reset",
+      target: MODE.WORK,
+      action: ACTION.INIT_WORK,
       duration: 25,
+      iterationIncrement: 0
+    },
+    TIMER_FINISHED: {
+      target: MODE.BREAK,
+      action: ACTION.INIT_BREAK,
+      duration: 5,
       iterationIncrement: 0
     },
     COMPLETED: {
       target: MODE.IDLE,
-      action: "reset",
+      action: ACTION.RESET,
       duration: 25,
       iterationIncrement: 0,
       resetIteration: true
     },
-    
-    isRunning: true,
 
     buttons: [
       {type: "PauseResume", className: "main-button"},
-      {label: "Reset", className: "secondary-button", event : EVENT.START},
+      {label: "Reset", className: "secondary-button", event : EVENT.RESET},
       {label: "Skip", className: "secondary-button", event : EVENT.SKIP},
       {label: "Finished", className: "secondary-button", event : EVENT.COMPLETED}
     ]
   },
 
-  [MODE.PAUSING]: {
+  [MODE.BREAK]: {
 
-    phaseDescription: "Pause",
+    phaseDescription: "Break",
 
+    START: {
+      target: MODE.BREAK,
+      action: ACTION.RESUME,
+      duration: 5,
+      iterationIncrement: 0
+    },
     PAUSE: {
-      target: MODE.PAUSING,
-      action: "pause",
+      target: MODE.BREAK,
+      action: ACTION.PAUSE,
       iterationIncrement: 0
     },
     RESUME: {
-      target: MODE.PAUSING,
-      action: "resume",
+      target: MODE.BREAK,
+      action: ACTION.RESUME,
       iterationIncrement: 0
     },
     RESET: {
-      target: MODE.PAUSING,
-      action: "startPause",
+      target: MODE.BREAK,
+      action: ACTION.INIT_BREAK,
       duration: 5,
       iterationIncrement: 0
     },
     SKIP: {
-      target: MODE.WORKING,
-      action: "startWork",
+      target: MODE.WORK,
+      action: ACTION.INIT_WORK,
       duration: 25,
       iterationIncrement: 1
     },
     TIMER_FINISHED:{
-      target: MODE.WORKING,
-      action: "startWork",
+      target: MODE.WORK,
+      action: ACTION.INIT_WORK,
       duration: 25,
       iterationIncrement: 1
     },

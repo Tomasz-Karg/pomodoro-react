@@ -19,47 +19,55 @@ export function HomePage() {
   //Set initial STATE to IDLE
   const [mode, setMode] = useState(MODE.IDLE);
 
-  // Set Timer to be paused
-  const [isRunning, setIsRunning] = useState(false)
+  // Set idle to one of three phases "idle" | "running" | "paused"
+  const [timerStatus, setTimerStatus] = useState("idle");
 
   // Set initial showed time as 25 minutes
   const [timeLeft, setTimeLeft] = useState(timeInMs(25));
 
-
-
-  /*TIMER LOGIC, useEffect to Render the Page every time, the state 
-   of "time" changes (dependency array). The "time" state gets set 
-   and saved every 1000 ms to one less second of its previous value. */
-
-  useEffect( () => {
-
-    if (!isRunning) return;
-    if (timeLeft <= 0) {
+    /* Action Handler */
+  const runAction = (action, payload) => {
+    switch(action) {
       
-      //TODO play audio
-      //audio.play();
-      return;
-    };
+      case "INIT_WORK":
+        setTimeLeft(timeInMs(payload.duration));
+        setTimerStatus("idle");
+        
+        // React now always uses the latest value to increment from
+        // safe pattern for asynchronus React state updates         
+        setIteration(prev => prev + payload.iterationIncrement)
+        break;
+
+      // all case statements share the same scope, so we isolate const
+      // pauseDuration to the local scope with the {} wrapping the case
+      case "INIT_BREAK": {
+        /* Implemented the 4th pause to be a 20 min pause */
+        const pauseDuration = 
+          iteration % 4 === 0 ? 20 : payload.duration
       
-    const timeoutId = setTimeout( () => {
-      setTimeLeft(time => time-1000)
-    }, 1000);
+        setTimeLeft(timeInMs(pauseDuration));
+        setTimerStatus("idle")
+        break;
+      }
 
-    return () => clearTimeout(timeoutId);
-  }, [isRunning, timeLeft]);
+      case "PAUSE":
+        setTimerStatus("paused");
+        break;
+      
+      case "RESUME":
+        setTimerStatus("running");
+        break;
 
-  /* TIMER finished logic*/
+      case "RESET":
+        setTimeLeft(timeInMs(payload.duration));
+        setTimerStatus("idle");
+        setIteration(0);
+        break;
 
-  useEffect ( () => {
-
-    if (timeLeft > 0) return;
-    if (!isRunning) return;
-
-    // setIsRunning(false);
-    
-    dispatch(EVENT.TIMER_FINISHED);
-    
-  },[timeLeft])
+      default:
+        break;
+    }
+  }
 
 
 
@@ -82,54 +90,30 @@ export function HomePage() {
 
     runAction(action, payload);
   }
+
+    /*TIMER LOGIC, useEffect to Render the Page every time, the state 
+    of "time" changes (dependency array). The "time" state gets set 
+    and saved every 1000 ms to one less second of its previous value.
+    also including the finish logic*/
+
+  useEffect( () => {
+
+    if (timerStatus === "paused" || timerStatus === "idle") return;
+    if (timeLeft <= 0) {
+      setTimerStatus("idle")
+      dispatch(EVENT.TIMER_FINISHED)
+      //TODO play audio
+      //audio.play();
+      return;
+    };
+      
+    const timeoutId = setTimeout( () => {
+      setTimeLeft(time => time-1000)
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [timerStatus, timeLeft]);
   
-
-
-  /* Action Handler */
-  const runAction = (action, payload) => {
-    switch(action) {
-      
-      case "startWork":
-        setTimeLeft(timeInMs(payload.duration));
-        setIsRunning(true);
-        
-        // React now always uses the latest value to increment from
-        // safe pattern for asynchronus React state updates         
-        setIteration(prev => prev + payload.iterationIncrement)
-        break;
-
-      // all case statements share the same scope, so we isolate const
-      // pauseDuration to the local scope with the {} wrapping the case
-      case "startPause": {
-        /* Implemented the 4th pause to be a 20 min pause */
-        const pauseDuration = 
-          iteration % 4 === 0 ? 20 : payload.duration
-      
-        setTimeLeft(timeInMs(pauseDuration));
-        setIsRunning(true)
-        break;
-      }
-      
-      case "reset":
-        setTimeLeft(timeInMs(payload.duration));
-        setIsRunning(false);
-        break;
-
-      case "pause":
-        setIsRunning(false);
-        break;
-      
-      case "resume":
-        setIsRunning(true);
-        break;
-
-      default:
-        break;
-    }
-  }
-  
-
-
   return (
       
     <div className='grid-container'>
@@ -162,9 +146,27 @@ export function HomePage() {
                 className = {button.className}
                 // If the Timer is running we should display the "Pause"
                 // Button, otherwise the "Resume" Button 
-                onClick = {() => dispatch(isRunning ? EVENT.PAUSE : EVENT.RESUME)}
+                
+                onClick = {() => {
+                  if (timerStatus === "idle"){
+                    dispatch(EVENT.START);
+                  } 
+                  else if(timerStatus === "paused"){
+                    dispatch(EVENT.RESUME);
+                  }
+                  else if(timerStatus === "running"){
+                    dispatch(EVENT.PAUSE);
+                  }
+                }}
+                
+                // Decision if Main Button is Start, Pause or Resume
               >
-                {isRunning ? "Pause" : "Resume"}
+                {timerStatus === "idle"
+                  ? "Start"
+                  : timerStatus === "paused"
+                  ? "Resume"
+                  : "Pause"
+                }
               </button>
             )
           }
