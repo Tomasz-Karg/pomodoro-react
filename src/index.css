@@ -11,7 +11,28 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.top-bar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #a0001c; /* deep red */
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.logo{
+  color: white;
+  font-size: 1.5rem;
+  font-family: 'Poppins', sans-serif; /* or any stylish font */
+  margin: 0;
+}
+
 .grid-container{
+  margin-top: 80px;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
@@ -20,13 +41,6 @@
 
   justify-items: center;
   align-items: center;
-}
-
-.title{
-  font-size: 4em;
-  line-height: 1.5;
-  font-weight: 700;
-  color: #8D021F;
 }
 
 .phase-description{
@@ -64,7 +78,7 @@
   font-weight: 500;
   font-family: inherit;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #8D021F;
+  background-color: #a0001c;
   cursor: pointer;
   transition: border-color 0.25s;
   margin: 1em 1em 0 1em;
@@ -94,13 +108,13 @@
 
 .secondary-button{
   border-radius: 8px;
-  border-color: #8D021F;
+  border-color: #a0001c;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1.3em;
   font-weight: 500;
   font-family: inherit;
-  color: #8D021F;
+  color: #a0001c;
   background-color: rgba(194, 178, 178, 0.87);
   cursor: pointer;
   transition: border-color 0.25s;

@@ -32,7 +32,8 @@ export const machine = {
   /* Outgoing transitions from the state IDLE */
   [MODE.IDLE]: {
 
-    phaseDescription: "Are you Ready to Pomodoro?",
+    phaseDescription: `Welcome to your Pomodoro Timer.
+    Press “Start” and get focused!`,
 
     /* EVENT START leads to target STATE WORKING*/
     START: {

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 
 import { Timer } from '../components/Timer';
+import { TopBar } from '../components/TopBar';
+import { ButtonGroup } from '../components/ButtonGroup';
 import { MODE, EVENT, machine} from '../config/machine'
 
 export function HomePage() {
@@ -116,75 +118,35 @@ export function HomePage() {
   
   return (
       
-    <div className='grid-container'>
-      <div className='title'>
-        Pomodoro Timer
+    <>
+      <TopBar />
+
+      <div className='grid-container'>
+
+        <div className='phase-description'>
+          {machine[mode].phaseDescription}
+        </div>
+
+        <div className='iteration'>
+          iteration #{iteration}
+        </div>
+
+        <div className='timer'>
+          <Timer timeLeft={timeLeft}/>
+        </div>
+
+        <div >
+          <ButtonGroup
+            machine={machine}
+            mode={mode}
+            timerStatus={timerStatus} 
+            dispatch={dispatch}
+            EVENT={EVENT}
+          />
+        </div>
+
       </div>
-
-      <div className='phase-description'>
-        {machine[mode].phaseDescription}
-      </div>
-
-      <div className='iteration'>
-        iteration #{iteration}
-      </div>
-
-      <div className='timer'>
-        <Timer timeLeft={timeLeft}/>
-      </div>
-
-      <div className='buttons'>
-        {/* TODO change index to a reliable alternative for the key*/} 
-
-        {/* Changed => (... to => {... because with the if staement we
-        cant use an implicit return anymore */}
-        {machine[mode].buttons.map((button, index) => {
-          if (button.type === "PauseResume"){
-            return(
-              <button 
-                key = {index}
-                className = {button.className}
-                // If the Timer is running we should display the "Pause"
-                // Button, otherwise the "Resume" Button 
-                
-                onClick = {() => {
-                  if (timerStatus === "idle"){
-                    dispatch(EVENT.START);
-                  } 
-                  else if(timerStatus === "paused"){
-                    dispatch(EVENT.RESUME);
-                  }
-                  else if(timerStatus === "running"){
-                    dispatch(EVENT.PAUSE);
-                  }
-                }}
-                
-                // Decision if Main Button is Start, Pause or Resume
-              >
-                {timerStatus === "idle"
-                  ? "Start"
-                  : timerStatus === "paused"
-                  ? "Resume"
-                  : "Pause"
-                }
-              </button>
-            )
-          }
-
-          return(
-            <button 
-              key = {index}
-              className = {button.className}
-              onClick = {() => dispatch(button.event)}
-            >
-              {button.label}
-            </button>
-          )
-        })
-        }
-      </div>
-
-    </div>
+    </>
 
   );
 }
