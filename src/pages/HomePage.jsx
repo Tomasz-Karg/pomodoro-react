@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef} from 'react'
 
 import { Timer } from '../components/Timer';
 import { TopBar } from '../components/TopBar';
 import { ButtonGroup } from '../components/ButtonGroup';
 import { MODE, EVENT, machine} from '../config/machine'
+import { MuteButton } from '../components/MuteButton';
+import timerSound from '../assets/timer-finished.mp3'
 
 export function HomePage() {
 
@@ -18,14 +20,24 @@ export function HomePage() {
   // every 4th work phase do a big pause, not just a small one
   const [iteration, setIteration] = useState(1);
 
-  //Set initial STATE to IDLE
+  //Set initial mode state to IDLE
   const [mode, setMode] = useState(MODE.IDLE);
 
-  // Set idle to one of three phases "idle" | "running" | "paused"
+  // Set timerStatus to idle of three phases "idle" | "running" | "paused" in total
   const [timerStatus, setTimerStatus] = useState("idle");
 
   // Set initial showed time as 25 minutes
   const [timeLeft, setTimeLeft] = useState(timeInMs(25));
+
+  // Set isMuted to false
+  const [isMuted, setIsMuted] = useState(false);
+
+  const toggleMute = () => {
+    setIsMuted(prev => !prev);
+  };
+
+  // create an audio object
+  const audioRef = useRef(new Audio(timerSound))
 
     /* Action Handler */
   const runAction = (action, payload) => {
@@ -104,8 +116,10 @@ export function HomePage() {
     if (timeLeft <= 0) {
       setTimerStatus("idle")
       dispatch(EVENT.TIMER_FINISHED)
-      //TODO play audio
-      //audio.play();
+
+      if (!isMuted) {
+        audioRef.current.play();
+      }
       return;
     };
       
@@ -144,6 +158,11 @@ export function HomePage() {
             EVENT={EVENT}
           />
         </div>
+
+        <MuteButton
+        isMuted={isMuted}
+        toggleMute={toggleMute}
+      />
 
       </div>
     </>

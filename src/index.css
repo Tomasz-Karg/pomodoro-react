@@ -137,3 +137,35 @@
 .secondary-button:focus-visible {
   box-shadow: 0 0 0 3px rgba(255,255,255,0.6);
 }
+
+.mute-button {
+  border-radius: 3px;
+  border-color: #7e0419;
+  border: 1px solid transparent;
+  padding: 0.3em 0.6em;
+  font-size: 1.3em;
+  font-weight: 500;
+  font-family: inherit;
+  color: #e0c4c9;
+  background-color: rgba(163, 39, 39, 0.87);
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin: 1em 1em 0 1em;
+}
+
+.mute-button:hover {
+  background-color: rgba(189, 62, 62, 0.87);
+}
+
+.mute-button:active {
+  transform: scale(0.97);
+}
+
+/*Same procedure as above with the main-button*/
+.mute-button:focus {
+  outline: none;
+}
+
+.mute-button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.6);
+}
